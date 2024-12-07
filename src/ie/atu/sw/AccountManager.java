@@ -4,9 +4,11 @@ import java.util.*;
 
 public class AccountManager extends BankingApp {
 	private List<Account> accounts;
+	private LoanManager loanManager;
 	
-	public AccountManager() {
-		accounts = new ArrayList<Account>();
+	public AccountManager(LoanManager loanManager) {
+		this.accounts = new ArrayList<Account>();
+		this.loanManager = loanManager;
 	}
 	
 	 /**
@@ -30,6 +32,7 @@ public class AccountManager extends BankingApp {
      */
     public void addAccount(String accountHolder, double initialDeposit) {
         accounts.add(new Account(accountHolder, initialDeposit));
+        loanManager.depositToBank(initialDeposit);
     }
 
     /**
@@ -42,6 +45,7 @@ public class AccountManager extends BankingApp {
         Account account = findAccount(accountHolder);
         if (account == null || amount <= 0) return false;
         account.deposit(amount);
+        loanManager.depositToBank(amount);
         return true;
     }
 
@@ -55,6 +59,7 @@ public class AccountManager extends BankingApp {
         Account account = findAccount(accountHolder);
         if (account == null || amount <= 0) return false;
         if (account.withdraw(amount)) {
+        	loanManager.withdrawFromBank(amount);
             return true;
         }
         return false;

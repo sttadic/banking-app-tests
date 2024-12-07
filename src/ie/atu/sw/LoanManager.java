@@ -1,10 +1,38 @@
 package ie.atu.sw;
 
 public class LoanManager {
+	// Tracks total deposits at bank-wide level (across all accounts in the bank)
 	private double totalDeposits;
 	
-	public LoanManager(double initialDeposits) {
-		this.totalDeposits = initialDeposits;
+	public LoanManager() {
+		this.totalDeposits = 0;
+	}
+	
+	 /**
+     * Gets the total deposits available in the bank.
+     * @return The total deposits.
+     */
+    public double getTotalDeposits() {
+        return totalDeposits;
+    }
+    
+    
+    /**
+     * Increases totalDeopsits by deposit amount.
+     * @param amount The deposit amount.
+     */
+	public void depositToBank(double amount) {
+		if (amount > 0) totalDeposits += amount;
+	}
+	
+	/**
+     * Decreases totalDeopsits by withdrawal amount.
+     * @param amount The withdrawal amount.
+     */
+	public void withdrawFromBank(double amount) {
+		if (amount > 0 && amount <= totalDeposits) {
+			totalDeposits -= amount;
+		}
 	}
 	
 	/**
@@ -33,13 +61,5 @@ public class LoanManager {
             return true;
         }
         return false;
-    }
-    
-    /**
-     * Gets the total deposits available in the bank.
-     * @return The total deposits.
-     */
-    public double getTotalDeposits() {
-        return totalDeposits;
     }
 }

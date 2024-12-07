@@ -13,34 +13,41 @@ import java.util.List;
  * The program uses a list of Account objects to manage account data.
  */
 public class BankingApp {
+	private AccountManager accountManager;
+	private LoanManager loanManager;
 	
+	public BankingApp() {
+		this.loanManager = new LoanManager();
+		this.accountManager = new AccountManager(loanManager);
+	}
 
 	public static void main(String[] args) {
 	    // Create a new banking application instance
 	    BankingApp bank = new BankingApp();
 
 	    // Add accounts
-	    bank.addAccount("Alice", 1000);
-	    bank.addAccount("Bob", 500);
+	    bank.accountManager.addAccount("Alice", 1000);
+	    bank.accountManager.addAccount("Bob", 500);
 
 	    // Test deposits
-	    System.out.println("Depositing 200 to Alice: " + bank.deposit("Alice", 200)); // Should return true
-	    System.out.println("Alice's balance: " + bank.getBalance("Alice")); // Should be 1200
+	    System.out.println("Depositing 200 to Alice: " + bank.accountManager.deposit("Alice", 200)); // Should return true
+	    System.out.println("Alice's balance: " + bank.accountManager.getBalance("Alice")); // Should be 1200
 
 	    // Test withdrawals
-	    System.out.println("Withdrawing 300 from Bob: " + bank.withdraw("Bob", 300)); // Should return true
-	    System.out.println("Bob's balance: " + bank.getBalance("Bob")); // Should be 200
+	    System.out.println("Withdrawing 300 from Bob: " + bank.accountManager.withdraw("Bob", 300)); // Should return true
+	    System.out.println("Bob's balance: " + bank.accountManager.getBalance("Bob")); // Should be 200
 
 	    // Test loan approval
-	    System.out.println("Approving a loan of 400 for Alice: " + bank.approveLoan("Alice", 400)); // Should return true
-	    System.out.println("Alice's loan: " + bank.getLoan("Alice")); // Should be 400
+	    Account alice = bank.accountManager.findAccount("Alice");
+	    System.out.println("Approving a loan of 400 for Alice: " + bank.loanManager.approveLoan(alice, 400)); // Should return true
+	    System.out.println("Alice's loan: " + alice.getLoan()); // Should be 400
 
 	    // Test loan repayment
-	    System.out.println("Repaying 200 of Alice's loan: " + bank.repayLoan("Alice", 200)); // Should return true
-	    System.out.println("Alice's remaining loan: " + bank.getLoan("Alice")); // Should be 200
+	    System.out.println("Repaying 200 of Alice's loan: " + bank.loanManager.repayLoan(alice, 200)); // Should return true
+	    System.out.println("Alice's remaining loan: " + alice.getLoan()); // Should be 200
 
 	    // Check total deposits in the bank
-	    System.out.println("Total deposits in the bank: " + bank.getTotalDeposits());
+	    System.out.println("Total deposits in the bank: " + bank.loanManager.getTotalDeposits());
 	}
 }
 
