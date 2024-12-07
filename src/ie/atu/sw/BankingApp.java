@@ -1,8 +1,5 @@
 package ie.atu.sw;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * This program simulates a simple banking application. It allows:
  * - Adding new accounts with an initial deposit.
@@ -15,10 +12,13 @@ import java.util.List;
 public class BankingApp {
 	private AccountManager accountManager;
 	private LoanManager loanManager;
+	private BankDeposits bankDeposits;
 	
 	public BankingApp() {
-		this.loanManager = new LoanManager();
-		this.accountManager = new AccountManager(loanManager);
+		this.bankDeposits = new BankDeposits();
+		this.loanManager = new LoanManager(bankDeposits);
+		this.accountManager = new AccountManager(bankDeposits);
+		
 	}
 
 	public static void main(String[] args) {
@@ -47,7 +47,7 @@ public class BankingApp {
 	    System.out.println("Alice's remaining loan: " + alice.getLoan()); // Should be 200
 
 	    // Check total deposits in the bank
-	    System.out.println("Total deposits in the bank: " + bank.loanManager.getTotalDeposits());
+	    System.out.println("Total deposits in the bank: " + bank.bankDeposits.getTotalDeposits());
 	}
 }
 

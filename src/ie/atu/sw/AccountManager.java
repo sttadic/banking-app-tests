@@ -2,14 +2,15 @@ package ie.atu.sw;
 
 import java.util.*;
 
-public class AccountManager extends BankingApp {
+public class AccountManager {
 	private List<Account> accounts;
-	private LoanManager loanManager;
+	private BankDeposits bankDeposits;
 	
-	public AccountManager(LoanManager loanManager) {
+	public AccountManager(BankDeposits bd) {
 		this.accounts = new ArrayList<Account>();
-		this.loanManager = loanManager;
+		this.bankDeposits = bd;
 	}
+	
 	
 	 /**
      * Helper method to find an account by account holder's name.
@@ -32,7 +33,7 @@ public class AccountManager extends BankingApp {
      */
     public void addAccount(String accountHolder, double initialDeposit) {
         accounts.add(new Account(accountHolder, initialDeposit));
-        loanManager.depositToBank(initialDeposit);
+        bankDeposits.depositToBank(initialDeposit);
     }
 
     /**
@@ -45,7 +46,7 @@ public class AccountManager extends BankingApp {
         Account account = findAccount(accountHolder);
         if (account == null || amount <= 0) return false;
         account.deposit(amount);
-        loanManager.depositToBank(amount);
+        bankDeposits.depositToBank(amount);
         return true;
     }
 
@@ -59,7 +60,7 @@ public class AccountManager extends BankingApp {
         Account account = findAccount(accountHolder);
         if (account == null || amount <= 0) return false;
         if (account.withdraw(amount)) {
-        	loanManager.withdrawFromBank(amount);
+        	bankDeposits.withdrawFromBank(amount);
             return true;
         }
         return false;
