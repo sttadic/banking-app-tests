@@ -1,0 +1,11 @@
+# Eclipse-specific files
+.classpath
+.project
+.settings/
+
+# Compiled files
+bin/
+
+# Other common files
+*.log
+*.class
