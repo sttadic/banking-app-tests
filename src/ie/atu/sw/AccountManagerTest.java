@@ -51,7 +51,7 @@ class AccountManagerTest {
 	@ValueSource(strings = {"Ann", "123", "null"})
 	void testFindAccountThrowsException(String accHolder) {
 		assertThrows(IllegalArgumentException.class, () -> {
-			accountManager.findAccount(accHolder);
+			accountManager.findAccount(accHolder.equals("null") ? null : accHolder);	// Testing actual null, not a string literal
 		});
 	}
 	
@@ -70,7 +70,7 @@ class AccountManagerTest {
 	
 	@ParameterizedTest
 	@ValueSource(doubles = {0, -0.1, -Double.MIN_VALUE})
-	void testDepositFail(double depAmount) {
+	void testDepositInvalidAmount(double depAmount) {
 		assertFalse(accountManager.deposit("Alice", depAmount));
 	}
 	
@@ -89,7 +89,7 @@ class AccountManagerTest {
 	
 	@ParameterizedTest
 	@CsvSource({"Alice, 1001", "Bob, 500.01"})
-	void testWithdrawFail(String accHolder, double witAmount) {
+	void testWithdrawExceedsBalance(String accHolder, double witAmount) {
 		assertFalse(accountManager.withdraw(accHolder, witAmount));
 	}
 }
