@@ -15,7 +15,8 @@ public class AccountManager {
 	 /**
      * Helper method to find an account by account holder's name.
      * @param accountHolder The name of the account holder.
-     * @return The Account object if found, otherwise null.
+     * @return The Account object if found.
+     * @throws IllegalArgumentException if Account object not found.
      */
     public Account findAccount(String accountHolder) {
         for (Account account : accounts) {
@@ -23,7 +24,7 @@ public class AccountManager {
                 return account;
             }
         }
-        return null;
+        throw new IllegalArgumentException("Account holder " + accountHolder + " does not exist!!!");
     }
 
     /**
@@ -44,7 +45,7 @@ public class AccountManager {
      */
     public boolean deposit(String accountHolder, double amount) {
         Account account = findAccount(accountHolder);
-        if (account == null || amount <= 0) return false;
+        if (amount <= 0) return false;
         account.deposit(amount);
         bankDeposits.depositToBank(amount);
         return true;
@@ -55,10 +56,11 @@ public class AccountManager {
      * @param accountHolder The name of the account holder.
      * @param amount The withdrawal amount.
      * @return True if the withdrawal is successful, otherwise false.
+     * @throws IllegalArgumentException if withdrawal amount is 0 or less.
      */
     public boolean withdraw(String accountHolder, double amount) {
         Account account = findAccount(accountHolder);
-        if (account == null || amount <= 0) return false;
+        if (amount <= 0) throw new IllegalArgumentException("Invalid withdrawal amount!!!");
         if (account.withdraw(amount)) {
         	bankDeposits.withdrawFromBank(amount);
             return true;
@@ -69,10 +71,10 @@ public class AccountManager {
     /**
      * Gets the balance of a specific account holder.
      * @param accountHolder The name of the account holder.
-     * @return The balance if the account exists, otherwise null.
+     * @return The balance.
      */
     public Double getBalance(String accountHolder) {
         Account account = findAccount(accountHolder);
-        return account != null ? account.getBalance() : null;
+        return account.getBalance();
     }
 }
