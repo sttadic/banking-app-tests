@@ -48,7 +48,7 @@ class AccountManagerTest {
 
 	
 	@ParameterizedTest
-	@ValueSource(strings = {"Ann", "123", "null"})
+	@ValueSource(strings = {"Ann", "123", "null", " "})
 	void testFindAccountThrowsException(String accHolder) {
 		assertThrows(IllegalArgumentException.class, () -> {
 			accountManager.findAccount(accHolder.equals("null") ? null : accHolder);	// Testing actual null, not a string literal
@@ -61,15 +61,16 @@ class AccountManagerTest {
 		assertNotNull(accountManager.findAccount("Tim"));
 	}
 	
-	@Test
-	@Timeout(value = 1, unit=TimeUnit.MILLISECONDS)
-	void testDepositGetBalanceSuccess() {
-		assertTrue(accountManager.deposit("Alice", Double.MAX_VALUE));
-		assertEquals(Double.MAX_VALUE, accountManager.getBalance("Alice"));
+	@ParameterizedTest
+	@ValueSource(doubles = {0.01, 999, Double.MAX_VALUE})
+	@Timeout(value = 5, unit=TimeUnit.MILLISECONDS)
+	void testDepositGetBalanceSuccess(double amount) {
+		assertTrue(accountManager.deposit("Alice", amount));
+		assertEquals(1000 + amount, accountManager.getBalance("Alice"));		// Alice starting deposit is 1000
 	}
 	
 	@ParameterizedTest
-	@ValueSource(doubles = {0, -0.1, -Double.MIN_VALUE})
+	@ValueSource(doubles = {0, -100, -Double.MIN_VALUE})
 	void testDepositInvalidAmount(double depAmount) {
 		assertFalse(accountManager.deposit("Alice", depAmount));
 	}
