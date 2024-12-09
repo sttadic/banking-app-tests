@@ -1,7 +1,9 @@
 package ie.atu.sw;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.concurrent.TimeUnit;
 
@@ -9,6 +11,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -61,4 +64,22 @@ class LoanManagerTest {
 	void testApproveLoanSuccess(String accHolder, double loanAmount) {
 		loanManager.approveLoan(accountManager.findAccount(accHolder), loanAmount);
 	}
+	
+	@Test
+	void testRepayLoanInsufficientRepayAmount() {
+		assertFalse(loanManager.repayLoan(accountManager.findAccount("Bill"), 0));
+	}
+	
+	@Test
+	void testRepayLoanAmountLargerThanLoan() {
+		loanManager.approveLoan(accountManager.findAccount("Alice"), 500);
+		assertFalse(loanManager.repayLoan(accountManager.findAccount("Alice"), 500.01));
+	}
+	
+	@Test
+	void testRepayLoanSuccess() {
+		loanManager.approveLoan(accountManager.findAccount("Alice"), 500);
+		assertTrue(loanManager.repayLoan(accountManager.findAccount("Alice"), 500));
+	}
+	
 }
