@@ -9,9 +9,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class AccountTest {
 	private Account account;
@@ -33,7 +34,7 @@ class AccountTest {
 	
 	@AfterAll
 	static void tearDownAfterClass() {
-		System.out.println("All tests in AccountTest completed");
+		System.out.println("All tests in AccountTest completed\n");
 	}
 
 	
@@ -62,15 +63,13 @@ class AccountTest {
 	
 	@Test
 	void testWithdrawSuccess() {
-		boolean result = account.withdraw(200);
-		assertTrue(result);
-		assertEquals(800, account.getBalance());
+		assertTrue(account.withdraw(999.99));
 	}
 	
-	@Test
-	void testWithdrawInsufficientFunds() {
-		boolean result = account.withdraw(1200);
-		assertFalse(result);
+	@ParameterizedTest
+	@ValueSource(doubles = {1000.01, 1100, Double.MAX_VALUE})
+	void testWithdrawInsufficientFunds(double amount) {
+		assertFalse(account.withdraw(1200));
 		assertEquals(1000, account.getBalance());
 	}
 	
@@ -83,16 +82,15 @@ class AccountTest {
 	@Test
 	void testRepayLoanSuccess() {
 		account.approveLoan(500);
-		boolean result = account.repayLoan(300);
-		assertTrue(result);
-		assertEquals(200, account.getLoan());
+		assertTrue(account.repayLoan(499));
+		assertEquals(1, account.getLoan());
 	}
 	
-	@Test
-	void testRepayLoanExceedingLoanAmount() {
+	@ParameterizedTest
+	@ValueSource(doubles = {500.01, 1000, Double.MAX_VALUE})
+	void testRepayLoanExceedingLoanAmount(double amount) {
 		account.approveLoan(500);
-		boolean result = account.repayLoan(500.01);
-		assertFalse(result);
+		assertFalse(account.repayLoan(amount));
 		assertEquals(500, account.getLoan());
 		assertEquals(1000, account.getBalance());
 	}
