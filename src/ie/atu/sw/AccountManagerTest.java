@@ -43,13 +43,13 @@ class AccountManagerTest {
 
 	@AfterAll
 	static void tearDownAfterClass() {
-		System.out.println("All tests in AccountManagerTest completed");
+		System.out.println("All tests in AccountManagerTest completed\n");
 	}
 
 	
 	@ParameterizedTest
 	@ValueSource(strings = {"Ann", "123", "null", " "})
-	void testFindAccountThrowsException(String accHolder) {
+	void testFindNonExistentAccountThrowsException(String accHolder) {
 		assertThrows(IllegalArgumentException.class, () -> {
 			accountManager.findAccount(accHolder.equals("null") ? null : accHolder);	// Testing actual null, not a string literal
 		});
@@ -76,7 +76,7 @@ class AccountManagerTest {
 	}
 	
 	@Test
-	void testWithdrawThrowsException() {
+	void testWithdrawInvalidAmountThrowsException() {
 		assertThrows(IllegalArgumentException.class, () -> {
 			accountManager.withdraw("Alice", 0);
 		});

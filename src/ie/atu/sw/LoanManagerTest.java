@@ -48,14 +48,14 @@ class LoanManagerTest {
 	
 	@AfterAll
 	static void tearDownAfterClass() {
-		System.out.println("All tests in LoanManagerTest completed");
+		System.out.println("All tests in LoanManagerTest completed\n");
 	}
 	
 	
 	@ParameterizedTest
 	@ValueSource(doubles = {1500.01, Double.MAX_VALUE})		// total deposits = 1500
 	@Timeout(value = 5, unit=TimeUnit.MILLISECONDS)
-	void testApproveLoanThrowsExceptionLoanExceedesDeposits(double loanAmount) {
+	void testApproveLoanExceedesDepositsThrowsException(double loanAmount) {
 		assertThrows(IllegalStateException.class, () -> {
 			loanManager.approveLoan(alice, loanAmount);
 			assertEquals(1500, bankDeposits.getTotalDeposits());
