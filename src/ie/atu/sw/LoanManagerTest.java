@@ -22,6 +22,8 @@ class LoanManagerTest {
 	private LoanManager loanManager;
 	private BankDeposits bankDeposits;
 	private AccountManager accountManager;
+	private Account alice;
+	private Account bill;
 	
 	@BeforeAll
 	static void setUpBeforeClass() {
@@ -35,6 +37,8 @@ class LoanManagerTest {
 		accountManager.addAccount("Alice", 1000);
 		accountManager.addAccount("Bill", 500);
 		loanManager = new LoanManager(bankDeposits);
+		alice = accountManager.findAccount("Alice");
+		bill = accountManager.findAccount("Bill");
 	}
 	
 	@AfterEach
@@ -50,10 +54,10 @@ class LoanManagerTest {
 	
 	@ParameterizedTest
 	@ValueSource(doubles = {1500.01, Double.MAX_VALUE})		// total deposits = 1500
-	@Timeout(value = 8, unit=TimeUnit.MILLISECONDS)
+	@Timeout(value = 5, unit=TimeUnit.MILLISECONDS)
 	void testApproveLoanThrowsExceptionLoanExceedesDeposits(double loanAmount) {
 		assertThrows(IllegalStateException.class, () -> {
-			loanManager.approveLoan(accountManager.findAccount("Alice"), loanAmount);
+			loanManager.approveLoan(alice, loanAmount);
 			assertEquals(1500, bankDeposits.getTotalDeposits());
 		});
 	}
@@ -65,21 +69,22 @@ class LoanManagerTest {
 		loanManager.approveLoan(accountManager.findAccount(accHolder), loanAmount);
 	}
 	
-	@Test
-	void testRepayLoanInsufficientRepayAmount() {
-		assertFalse(loanManager.repayLoan(accountManager.findAccount("Bill"), 0));
+	@ParameterizedTest
+	@ValueSource(doubles = {0, -500, -Double.MIN_VALUE})
+	void testRepayLoanInvalidRepayAmount(double repayAmount) {
+		loanManager.approveLoan(bill, 500);
+		assertFalse(loanManager.repayLoan(bill, repayAmount));
 	}
 	
 	@Test
 	void testRepayLoanAmountLargerThanLoan() {
-		loanManager.approveLoan(accountManager.findAccount("Alice"), 500);
-		assertFalse(loanManager.repayLoan(accountManager.findAccount("Alice"), 500.01));
+		loanManager.approveLoan(alice, 500);
+		assertFalse(loanManager.repayLoan(alice, 500.01));
 	}
 	
 	@Test
 	void testRepayLoanSuccess() {
-		loanManager.approveLoan(accountManager.findAccount("Alice"), 500);
-		assertTrue(loanManager.repayLoan(accountManager.findAccount("Alice"), 500));
+		loanManager.approveLoan(alice, 500);
+		assertTrue(loanManager.repayLoan(alice, 500));
 	}
-	
 }
