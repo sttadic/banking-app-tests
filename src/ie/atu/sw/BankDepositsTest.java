@@ -35,7 +35,7 @@ class BankDepositsTest {
 	
 	@AfterAll
 	static void tearDownAfterClass() {
-		System.out.println("All tests in BankDeposits completed");
+		System.out.println("All tests in BankDeposits completed\n");
 	}
 	
 	

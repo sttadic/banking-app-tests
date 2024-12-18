@@ -8,7 +8,8 @@ import org.junit.platform.suite.api.Suite;
 	AccountTest.class,
 	AccountManagerTest.class,
 	LoanManagerTest.class,
-	BankDepositsTest.class
+	BankDepositsTest.class,
+	BankingAppTest.class
 })
 public class RunnerTest {
 

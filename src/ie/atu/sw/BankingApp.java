@@ -21,6 +21,31 @@ public class BankingApp {
 		
 	}
 
+	/**
+	 * Getter for AccountManager, primarily for testing purposes.
+	 * @return AccountManager instance
+	 */
+	public AccountManager getAccountManager() {
+		return accountManager;
+	}
+	
+	/**
+	 * Getter for LoanManager, primarily for testing purposes.
+	 * @return LoanManager instance
+	 */
+	public LoanManager getLoanManager() {
+		return loanManager;
+	}
+	
+	/**
+	 * Getter for BankDeposits, primarily for testing purposes.
+	 * @return BankDeposits instance
+	 */
+	public BankDeposits getBankDeposits() {
+		return bankDeposits;
+	}
+
+
 	public static void main(String[] args) {
 	    // Create a new banking application instance
 	    BankingApp bank = new BankingApp();
